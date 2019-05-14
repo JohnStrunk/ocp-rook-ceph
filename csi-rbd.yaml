@@ -1,0 +1,23 @@
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+   name: csi-rbd
+provisioner: rbd.csi.ceph.com
+parameters:
+    # Comma separated list of Ceph monitors
+    # if using FQDN, make sure csi plugin's dns policy is appropriate.
+    monitors: rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-b.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-c.rook-ceph.svc.cluster.local:6789
+    pool: replicapool
+
+    # The secrets have to contain Ceph admin credentials.
+    csi.storage.k8s.io/provisioner-secret-name: csi-rbd-secret
+    csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+    csi.storage.k8s.io/node-publish-secret-name: csi-rbd-secret
+    csi.storage.k8s.io/node-publish-secret-namespace: rook-ceph
+
+    # Ceph users for operating RBD
+    adminid: admin
+    userid: admin
+reclaimPolicy: Delete
