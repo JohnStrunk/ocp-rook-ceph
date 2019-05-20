@@ -13,6 +13,7 @@ for kind in CephFilesystems CephBlockPools CephClusters; do
 done
 
 ../ocp4 delete namespace "$NAMESPACE"
+../ocp4 delete namespace "$NAMESPACE-blocks"
 
 # For some reason, we can only create privileged containers in the default
 # namespace

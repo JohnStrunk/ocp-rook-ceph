@@ -28,15 +28,17 @@ MANIFESTS=(
 
 echo "Deploying to $REPLICAS workers..."
 
-../ocp4 create namespace "$NAMESPACE"
-
 echo Obtaining block devices...
-../ocp4 -n "$NAMESPACE" apply -f block-pv.yml
-../ocp4 -n "$NAMESPACE" scale "--replicas=$REPLICAS" statefulset/block-devs
-while [[ $(../ocp4 -n "$NAMESPACE" get statefulset/block-devs -ojsonpath='{.status.readyReplicas}') != "$REPLICAS" ]]; do
+../ocp4 create namespace "$NAMESPACE-blocks"
+../ocp4 -n "$NAMESPACE-blocks" apply -f block-pv.yml
+../ocp4 -n "$NAMESPACE-blocks" apply -f block-pv.yml
+../ocp4 -n "$NAMESPACE-blocks" scale "--replicas=$REPLICAS" statefulset/block-devs
+while [[ $(../ocp4 -n "$NAMESPACE-blocks" get statefulset/block-devs -ojsonpath='{.status.readyReplicas}') != "$REPLICAS" ]]; do
         echo Waiting for replicas to be ready...
         sleep 5
 done
+
+../ocp4 create namespace "$NAMESPACE"
 
 for m in ${MANIFESTS[*]}; do
         ../ocp4 -n "$NAMESPACE" apply -f "$m"
