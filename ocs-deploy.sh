@@ -10,7 +10,8 @@ cd "$SCRIPT_DIR" || exit 1
 #-- pull straight from GH. Could also set this to a local copy
 ROOK_PATH="https://raw.githubusercontent.com/rook/rook/master"
 NAMESPACE="rook-ceph"
-REPLICAS=3
+#-- for now, every worker becomes a ceph osd
+REPLICAS="$(../ocp4 get no -lnode-role.kubernetes.io/worker --no-headers | wc -l)"
 MANIFESTS=(
             "${ROOK_PATH}/cluster/examples/kubernetes/ceph/common.yaml"
             "${ROOK_PATH}/cluster/examples/kubernetes/ceph/csi/rbac/cephfs/csi-nodeplugin-rbac.yaml"
@@ -25,10 +26,13 @@ MANIFESTS=(
             "csi-cephfs.yaml"
           )
 
+echo "Deploying to $REPLICAS workers..."
+
 ../ocp4 create namespace "$NAMESPACE"
 
 echo Obtaining block devices...
 ../ocp4 -n "$NAMESPACE" apply -f block-pv.yml
+../ocp4 -n "$NAMESPACE" scale "--replicas=$REPLICAS" statefulset/block-devs
 while [[ $(../ocp4 -n "$NAMESPACE" get statefulset/block-devs -ojsonpath='{.status.readyReplicas}') != "$REPLICAS" ]]; do
         echo Waiting for replicas to be ready...
         sleep 5
