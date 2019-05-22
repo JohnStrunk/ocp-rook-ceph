@@ -7,42 +7,50 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: block-devs # has to match .spec.template.metadata.labels
-  #serviceName: "nginx"
-  replicas: 1
+      app: block-devs
+  replicas: 0
   podManagementPolicy: Parallel
   template:
     metadata:
       labels:
-        app: block-devs # has to match .spec.selector.matchLabels
+        app: block-devs
     spec:
-      terminationGracePeriodSeconds: 10
-      podAntiAffinity:
-        preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            #labelSelector:
-            #  matchExpressions:
-            #  - key: kubernetes.io/hostname
-            #    operator: In
-            #    values:
-            #    - S2
-            topologyKey: failure-domain.beta.kubernetes.io/zone
+      terminationGracePeriodSeconds: 2
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - block-devs
+              topologyKey: "kubernetes.io/hostname"
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - block-devs
+                topologyKey: failure-domain.beta.kubernetes.io/zone
       containers:
-      - name: centos
-        image: centos:7
-        command: ["/bin/bash", "-c"]
-        args: ["sleep infinity"]
-        volumeDevices:
-        - name: block
-          devicePath: /dev/my-block
+        - name: centos
+          image: centos:7
+          command: ["/bin/bash", "-c"]
+          args: ["sleep infinity"]
+          volumeDevices:
+            - name: block
+              devicePath: /dev/my-block
   volumeClaimTemplates:
-  - metadata:
-      name: block
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      #storageClassName: "my-storage-class"
-      volumeMode: Block
-      resources:
-        requests:
-          storage: 1Ti
+    - metadata:
+        name: block
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        # storageClassName: "my-storage-class"
+        volumeMode: Block
+        resources:
+          requests:
+            storage: 1Ti
