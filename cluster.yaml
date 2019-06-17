@@ -7,7 +7,7 @@ metadata:
   namespace: rook-ceph
 spec:
   cephVersion:
-    image: ceph/ceph:v14.2.1-20190430
+    image: ceph/ceph:v14
     allowUnsupported: false
   dataDirHostPath: /var/lib/rook
   mon:
@@ -25,6 +25,3 @@ spec:
     useAllNodes: true
     topologyAware: true
     useAllDevices: true
-    deviceFilter:
-    location:
-    config:
