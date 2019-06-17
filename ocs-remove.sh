@@ -1,5 +1,7 @@
 #! /bin/bash
 
+OC="$(realpath "${OC:-"$(command -v oc)"}")"
+
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 cd "$SCRIPT_DIR" || exit 1
 
