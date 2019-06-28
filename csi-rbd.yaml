@@ -6,9 +6,7 @@ metadata:
    name: csi-rbd
 provisioner: rbd.csi.ceph.com
 parameters:
-    # Comma separated list of Ceph monitors
-    # if using FQDN, make sure csi plugin's dns policy is appropriate.
-    monitors: rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-b.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-c.rook-ceph.svc.cluster.local:6789
+    clusterID: rook-ceph
     pool: replicapool
 
     # The secrets have to contain Ceph admin credentials.

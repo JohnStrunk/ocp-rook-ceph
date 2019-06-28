@@ -59,7 +59,7 @@ OPERATOR_POD="$("$OC" -n "$NAMESPACE" get po | grep rook-ceph-operator | awk '{p
 ADMIN_KEY="$("$OC" -n "$NAMESPACE" exec -it "$OPERATOR_POD" -- ceph auth get-key client.admin)"
 
 #-- Create CSI RBD secret
-"$OC" -n "$NAMESPACE" create secret generic csi-rbd-secret "--from-literal=admin=$ADMIN_KEY"
+"$OC" -n "$NAMESPACE" create secret generic csi-rbd-secret "--from-literal=userID=admin" "--from-literal=userKey=$ADMIN_KEY" "--from-literal=adminID=admin" "--from-literal=adminKey=$ADMIN_KEY"
 
 #-- Create CSI CephFS secret
 "$OC" -n "$NAMESPACE" create secret generic csi-cephfs-secret "--from-literal=userID=admin" "--from-literal=userKey=$ADMIN_KEY" "--from-literal=adminID=admin" "--from-literal=adminKey=$ADMIN_KEY"
