@@ -3,7 +3,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-   name: csi-rbd
+    name: csi-rbd
 provisioner: rbd.csi.ceph.com
 parameters:
     clusterID: rook-ceph
@@ -12,8 +12,8 @@ parameters:
     # The secrets have to contain Ceph admin credentials.
     csi.storage.k8s.io/provisioner-secret-name: csi-rbd-secret
     csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-    csi.storage.k8s.io/node-publish-secret-name: csi-rbd-secret
-    csi.storage.k8s.io/node-publish-secret-namespace: rook-ceph
+    csi.storage.k8s.io/node-stage-secret-name: csi-rbd-secret
+    csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
 
     # Ceph users for operating RBD
     adminid: admin
