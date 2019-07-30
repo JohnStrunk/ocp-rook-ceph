@@ -7,6 +7,8 @@ metadata:
 provisioner: cephfs.csi.ceph.com
 parameters:
   monitors: rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-b.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-c.rook-ceph.svc.cluster.local:6789
+  clusterID: rook-ceph
+  fsName: mycephfs
 
   # For provisionVolume: "true":
   #   A new volume will be created along with a new Ceph user.
