@@ -14,8 +14,4 @@ parameters:
     csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
     csi.storage.k8s.io/node-stage-secret-name: csi-rbd-secret
     csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-
-    # Ceph users for operating RBD
-    adminid: admin
-    userid: admin
 reclaimPolicy: Delete
