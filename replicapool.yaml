@@ -7,5 +7,6 @@ metadata:
   namespace: rook-ceph
 spec:
   failureDomain: host
+  # failureDomain: zone
   replicated:
     size: 3
