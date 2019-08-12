@@ -13,6 +13,12 @@ spec:
   mon:
     count: 3
     allowMultiplePerNode: false
+    volumeClaimTemplate:
+      spec:
+        storageClassName: gp2
+        resources:
+          requests:
+            storage: 10Gi
   dashboard:
     enabled: false
   network:
@@ -22,6 +28,18 @@ spec:
   annotations:
   resources:
   storage:
-    useAllNodes: true
+    storageClassDeviceSets:
+      - name: set1
+        count: 3
+        volumeClaimTemplates:
+          - metadata:
+              name: data
+            spec:
+              resources:
+                requests:
+                  storage: 1Ti
+              storageClassName: gp2
+              volumeMode: Block
+              accessModes:
+                - ReadWriteOnce
     topologyAware: true
-    useAllDevices: true
