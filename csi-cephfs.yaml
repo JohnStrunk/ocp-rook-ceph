@@ -6,25 +6,10 @@ metadata:
   name: csi-cephfs
 provisioner: cephfs.csi.ceph.com
 parameters:
-  monitors: rook-ceph-mon-a.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-b.rook-ceph.svc.cluster.local:6789,rook-ceph-mon-c.rook-ceph.svc.cluster.local:6789
   clusterID: rook-ceph
   fsName: mycephfs
 
-  # For provisionVolume: "true":
-  #   A new volume will be created along with a new Ceph user.
-  #   Requires admin credentials (adminID, adminKey).
-  # For provisionVolume: "false":
-  #   It is assumed the volume already exists and the user is expected
-  #   to provide path to that volume (rootPath) and user credentials (userID, userKey).
-  provisionVolume: "true"
-
-  # Ceph pool into which the volume shall be created
-  # Required for provisionVolume: "true"
   pool: mycephfs-data0
-
-  # Root path of an existing CephFS volume
-  # Required for provisionVolume: "false"
-  # rootPath: /absolute/path
 
   # The secrets have to contain user and/or Ceph admin credentials.
   csi.storage.k8s.io/provisioner-secret-name: csi-cephfs-secret
