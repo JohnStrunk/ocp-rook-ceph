@@ -36,3 +36,6 @@ while [[ $(../ocp4 get -n "$NAMESPACE" cephcluster/rook-ceph -ocustom-columns=he
         echo Waiting for cluster to be healthy
         sleep 10
 done
+
+echo Deployment of rook/ceph completed:
+"$OC" -n "$NAMESPACE" get po -oyaml | grep -E '(image:|imageID:)' | sort -u
