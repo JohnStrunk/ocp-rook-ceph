@@ -9,11 +9,16 @@ OC="$(realpath "${OC:-"$(command -v oc)"}")"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 cd "$SCRIPT_DIR" || exit 1
 
+# And machineset that only has 1 instance gets scaled to 2...
+MACHINESETS=$("$OC" -n openshift-machine-api get machinesets -o custom-columns=name:metadata.name,replicas:spec.replicas --no-headers  | grep ' 1' | awk '{ print $1 }')
+for ms in $MACHINESETS; do
+        "$OC" -n openshift-machine-api scale --replicas=2 "machinesets/$ms"
+done
+"$OC" -n openshift-machine-api get machinesets
+
 #-- pull straight from GH. Could also set this to a local copy
 ROOK_PATH="https://raw.githubusercontent.com/rook/rook/master"
 NAMESPACE="rook-ceph"
-# Must match spec.storage.storageClassDeviceSets[].count in cluster.yaml
-REPLICAS=3
 MANIFESTS=(
             "${ROOK_PATH}/cluster/examples/kubernetes/ceph/common.yaml"
             "${ROOK_PATH}/cluster/examples/kubernetes/ceph/operator-openshift.yaml"
@@ -23,8 +28,6 @@ MANIFESTS=(
             "csi-rbd.yaml"
             "csi-cephfs.yaml"
           )
-
-echo "Deploying $REPLICAS OSDs..."
 
 "$OC" create namespace "$NAMESPACE"
 
