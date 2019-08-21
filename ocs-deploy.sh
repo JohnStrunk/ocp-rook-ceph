@@ -1,9 +1,5 @@
 #! /bin/bash
 
-#--
-# See: https://rook.io/docs/rook/master/ceph-csi-drivers.html
-#--
-
 OC="$(realpath "${OC:-"$(command -v oc)"}")"
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
@@ -16,26 +12,27 @@ for ms in $MACHINESETS; do
 done
 "$OC" -n openshift-machine-api get machinesets
 
-#-- pull straight from GH. Could also set this to a local copy
-ROOK_PATH="https://raw.githubusercontent.com/rook/rook/master"
-NAMESPACE="rook-ceph"
+NAMESPACE="openshift-storage"
+OCS_PATH="https://raw.githubusercontent.com/openshift/ocs-operator/master"
+"$OC" apply -f "${OCS_PATH}/deploy/deploy-with-olm.yaml"
+
+while [[ $("$OC" get -n "$NAMESPACE" deployment/ocs-operator -ocustom-columns=ready:status.readyReplicas --no-headers) != "1" ]]; do
+        echo Waiting for ocs-operator to be ready
+        sleep 10
+done
+
 MANIFESTS=(
-            "${ROOK_PATH}/cluster/examples/kubernetes/ceph/common.yaml"
-            "${ROOK_PATH}/cluster/examples/kubernetes/ceph/operator-openshift.yaml"
-            "cluster.yaml"
-            "replicapool.yaml"
-            "mycephfs.yaml"
-            "csi-rbd.yaml"
-            "csi-cephfs.yaml"
-          )
-
-"$OC" create namespace "$NAMESPACE"
-
+        storagecluster.yaml
+        replicapool.yaml
+        mycephfs.yaml
+        csi-cephfs.yaml
+        csi-rbd.yaml
+)
 for m in ${MANIFESTS[*]}; do
         "$OC" -n "$NAMESPACE" apply -f "$m"
 done
 
-while [[ $(../ocp4 get -n "$NAMESPACE" cephcluster/rook-ceph -ocustom-columns=health:status.ceph.health --no-headers) != "HEALTH_OK" ]]; do
+while [[ $("$OC" get -n "$NAMESPACE" cephcluster/openshift-storage -ocustom-columns=health:status.ceph.health --no-headers) != "HEALTH_OK" ]]; do
         echo Waiting for cluster to be healthy
         sleep 10
 done

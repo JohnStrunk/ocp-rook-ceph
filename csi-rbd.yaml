@@ -4,16 +4,16 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
     name: csi-rbd
-provisioner: rook-ceph.rbd.csi.ceph.com
+provisioner: openshift-storage.rbd.csi.ceph.com
 parameters:
-    clusterID: rook-ceph
+    clusterID: openshift-storage
     pool: replicapool
 
     # The secrets have to contain Ceph admin credentials.
     csi.storage.k8s.io/provisioner-secret-name: rook-ceph-csi
-    csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+    csi.storage.k8s.io/provisioner-secret-namespace: openshift-storage
     csi.storage.k8s.io/node-stage-secret-name: rook-ceph-csi
-    csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+    csi.storage.k8s.io/node-stage-secret-namespace: openshift-storage
 
     # Use xfs as the file system in hope of getting around map/unmap problems.
     csi.storage.k8s.io/fstype: xfs
