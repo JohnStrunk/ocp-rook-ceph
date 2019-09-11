@@ -7,6 +7,8 @@ cd "$SCRIPT_DIR" || exit 1
 
 NAMESPACE="openshift-storage"
 
+"$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
+
 "$OC" delete StorageClass/csi-cephfs
 "$OC" delete StorageClass/csi-rbd
 
@@ -14,7 +16,11 @@ for kind in CephFilesystems CephBlockPools; do
         "$OC" -n "$NAMESPACE" delete "$kind" --all
 done
 
-"$OC" -n "NAMESPACE" delete -f storagecluster.yaml
 "$OC" -n "$NAMESPACE" delete CephClusters --all
 
 "$OC" delete namespace "$NAMESPACE"
+
+MACHINESETS="$("$OC" -n openshift-machine-api get machinesets -o custom-columns=name:metadata.name --no-headers | grep ocs)"
+for ms in $MACHINESETS; do
+        "$OC" -n openshift-machine-api delete "machinesets/$ms"
+done
