@@ -15,6 +15,6 @@ parameters:
     csi.storage.k8s.io/node-stage-secret-name: rook-ceph-csi
     csi.storage.k8s.io/node-stage-secret-namespace: openshift-storage
 
-    # Use xfs as the file system in hope of getting around map/unmap problems.
-    csi.storage.k8s.io/fstype: xfs
+    # Use ext4 since xfs w/ rbd has deadlock problem under load
+    csi.storage.k8s.io/fstype: ext4
 reclaimPolicy: Delete
