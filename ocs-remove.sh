@@ -9,13 +9,10 @@ NAMESPACE="openshift-storage"
 
 "$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
 
-"$OC" delete StorageClass/csi-cephfs
-"$OC" delete StorageClass/csi-rbd
+"$OC" delete StorageClass/openshift-storage-ceph-rbd
+"$OC" delete StorageClass/openshift-storage-cephfs
 
-for kind in CephFilesystems CephBlockPools; do
-        "$OC" -n "$NAMESPACE" delete "$kind" --all
-done
-
+# Still needed?
 "$OC" -n "$NAMESPACE" delete CephClusters --all
 
 "$OC" delete namespace "$NAMESPACE"

@@ -27,11 +27,7 @@ done
 
 MANIFESTS=(
         storagecluster.yaml
-        replicapool.yaml
-        mycephfs.yaml
-        csi-cephfs.yaml
-        csi-rbd.yaml
-)
+        )
 for m in ${MANIFESTS[*]}; do
         "$OC" -n "$NAMESPACE" apply -f "$m"
 done
