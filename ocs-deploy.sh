@@ -6,7 +6,7 @@ SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 cd "$SCRIPT_DIR" || exit 1
 
 # And machinesets for OCS
-OCS_INSTANCE_TYPE="m4.xlarge"
+OCS_INSTANCE_TYPE="m5.4xlarge"
 OCS_PER_AZ=1
 MACHINESETS=$("$OC" -n openshift-machine-api get machinesets -o custom-columns=name:metadata.name,replicas:spec.replicas --no-headers  | grep ' 1' | grep -v ocs | awk '{ print $1 }')
 for ms in $MACHINESETS; do
@@ -17,8 +17,11 @@ done
 "$OC" -n openshift-machine-api get machinesets
 
 NAMESPACE="openshift-storage"
-OCS_PATH="https://raw.githubusercontent.com/openshift/ocs-operator/master"
-"$OC" apply -f "${OCS_PATH}/deploy/deploy-with-olm.yaml"
+# Upstream deployment
+OCS_PATH="https://raw.githubusercontent.com/openshift/ocs-operator/master/deploy/deploy-with-olm.yaml"
+# Downstream deployment
+#OCS_PATH="http://pkgs.devel.redhat.com/cgit/containers/ocs-registry/plain/deploy-with-olm.yaml?h=ocs-4.2-rhel-8"
+"$OC" apply -f "${OCS_PATH}"
 
 while [[ $("$OC" get -n "$NAMESPACE" deployment/ocs-operator -ocustom-columns=ready:status.readyReplicas --no-headers) != "1" ]]; do
         echo Waiting for ocs-operator to be ready
