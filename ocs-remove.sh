@@ -13,7 +13,7 @@ NAMESPACE="openshift-storage"
 "$OC" delete StorageClass/openshift-storage-cephfs
 
 # Still needed?
-"$OC" -n "$NAMESPACE" delete CephClusters --all
+#"$OC" -n "$NAMESPACE" delete CephClusters --all
 
 "$OC" delete namespace "$NAMESPACE"
 
