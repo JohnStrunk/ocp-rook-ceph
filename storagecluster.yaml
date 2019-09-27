@@ -5,6 +5,7 @@ kind: StorageCluster
 metadata:
   name: openshift-storage
 spec:
+  # hostNetwork: true
   manageNodes: false
   monPVCTemplate:
     spec:
