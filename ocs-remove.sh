@@ -9,15 +9,15 @@ NAMESPACE="openshift-storage"
 
 "$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
 
-"$OC" delete StorageClass/openshift-storage-ceph-rbd
-"$OC" delete StorageClass/openshift-storage-cephfs
-
-# Still needed?
-#"$OC" -n "$NAMESPACE" delete CephClusters --all
-
 "$OC" delete namespace "$NAMESPACE"
 
 MACHINESETS="$("$OC" -n openshift-machine-api get machinesets -o custom-columns=name:metadata.name --no-headers | grep ocs)"
 for ms in $MACHINESETS; do
         "$OC" -n openshift-machine-api delete "machinesets/$ms"
 done
+
+"$OC" delete StorageClass/openshift-storage-ceph-rbd
+"$OC" delete StorageClass/openshift-storage-cephfs
+
+"$OC" delete -n openshift-marketplace CatalogSource/local-storage-manifests
+"$OC" delete -n openshift-marketplace CatalogSource/ocs-catalogsource
