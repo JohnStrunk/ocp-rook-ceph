@@ -9,6 +9,9 @@ NAMESPACE="openshift-storage"
 
 "$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
 
+#-- Remove the finalizer so that the NS delete succeeds
+"$OC" -n "$NAMESPACE" patch cephclusters/openshift-storage --type merge -p '{"metadata":{"finalizers": [null]}}'
+
 "$OC" delete namespace "$NAMESPACE"
 
 MACHINESETS="$("$OC" -n openshift-machine-api get machinesets -o custom-columns=name:metadata.name --no-headers | grep ocs)"
