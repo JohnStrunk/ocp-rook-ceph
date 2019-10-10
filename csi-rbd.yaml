@@ -16,5 +16,6 @@ parameters:
     csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
 
     # Use xfs as the file system in hope of getting around map/unmap problems.
-    csi.storage.k8s.io/fstype: xfs
+    # Use ext4 to avoid kernel deadlock
+    csi.storage.k8s.io/fstype: ext4
 reclaimPolicy: Delete

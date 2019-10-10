@@ -7,11 +7,11 @@ cd "$SCRIPT_DIR" || exit 1
 
 NAMESPACE="rook-ceph"
 
-../ocp4 delete StorageClass/csi-cephfs
-../ocp4 delete StorageClass/csi-rbd
+"$OC" delete StorageClass/csi-cephfs
+"$OC" delete StorageClass/csi-rbd
 
 for kind in CephFilesystems CephBlockPools CephClusters; do
-        ../ocp4 -n "$NAMESPACE" delete "$kind" --all
+        "$OC" -n "$NAMESPACE" delete "$kind" --all
 done
 
-../ocp4 delete namespace "$NAMESPACE"
+"$OC" delete namespace "$NAMESPACE"

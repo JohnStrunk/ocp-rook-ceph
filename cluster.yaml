@@ -17,122 +17,24 @@ spec:
   mon:
     count: 3
     allowMultiplePerNode: false
-    volumeClaimTemplate:
-      spec:
-        storageClassName: gp2
-        resources:
-          requests:
-            storage: 10Gi
   network:
     hostNetwork: false
   rbdMirroring:
     workers: 0
   annotations:
   resources:
-    mds: # doesn't get passed?
-      limits:
-        cpu: 2000m
-        memory: 4Gi
-      requests:
-        cpu: 100m
-        memory: 4Gi
-    mgr:
-      limits:
-        cpu: 2000m
-        memory: 3Gi
-      requests:
-        cpu: 100m
-        memory: 500Mi
-    mon:
-      limits:
-        cpu: 2000m
-        memory: 2Gi
-      requests:
-        cpu: 100m
-        memory: 1Gi
   storage:
     storageClassDeviceSets:
-      - name: zone-a
-        count: 1
-        placement:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: failure-domain.beta.kubernetes.io/zone
-                      operator: In
-                      values: [us-east-1a, us-east-2a]
-        resources:
-          limits:
-            cpu: 2000m
-            memory: 4Gi
-          requests:
-            cpu: 100m
-            memory: 4Gi
+      - name: set1
+        count: 3
         volumeClaimTemplates:
           - metadata:
               name: data
             spec:
               resources:
                 requests:
-                  storage: 1Ti
-              storageClassName: gp2
-              volumeMode: Block
-              accessModes:
-                - ReadWriteOnce
-      - name: zone-b
-        count: 1
-        placement:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: failure-domain.beta.kubernetes.io/zone
-                      operator: In
-                      values: [us-east-1b, us-east-2b]
-        resources:
-          limits:
-            cpu: 2000m
-            memory: 4Gi
-          requests:
-            cpu: 100m
-            memory: 4Gi
-        volumeClaimTemplates:
-          - metadata:
-              name: data
-            spec:
-              resources:
-                requests:
-                  storage: 1Ti
-              storageClassName: gp2
-              volumeMode: Block
-              accessModes:
-                - ReadWriteOnce
-      - name: zone-c
-        count: 1
-        placement:
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: failure-domain.beta.kubernetes.io/zone
-                      operator: In
-                      values: [us-east-1c, us-east-2c]
-        resources:
-          limits:
-            cpu: 2000m
-            memory: 4Gi
-          requests:
-            cpu: 100m
-            memory: 4Gi
-        volumeClaimTemplates:
-          - metadata:
-              name: data
-            spec:
-              resources:
-                requests:
-                  storage: 1Ti
-              storageClassName: gp2
+                  storage: 25Gi
+              storageClassName: local-block
               volumeMode: Block
               accessModes:
                 - ReadWriteOnce
