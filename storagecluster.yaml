@@ -18,6 +18,7 @@ spec:
   storageDeviceSets:
   - name: zone-a
     count: 1
+    replica: 1
     resources:
       limits:
         cpu: 2000m
@@ -45,6 +46,7 @@ spec:
     portable: true
   - name: zone-b
     count: 1
+    replica: 1
     resources:
       limits:
         cpu: 2000m
@@ -72,6 +74,7 @@ spec:
     portable: true
   - name: zone-c
     count: 1
+    replica: 1
     resources:
       limits:
         cpu: 2000m
