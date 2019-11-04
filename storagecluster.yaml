@@ -16,80 +16,8 @@ spec:
         requests:
           storage: 10Gi
   storageDeviceSets:
-  - name: zone-a
-    count: 1
-    replica: 1
-    resources:
-      limits:
-        cpu: 2000m
-        memory: 4Gi
-      requests:
-        cpu: 100m
-        memory: 4Gi
-    placement:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: failure-domain.beta.kubernetes.io/zone
-                  operator: In
-                  values: [us-east-1a, us-east-2a]
-    dataPVCTemplate:
-      spec:
-        storageClassName: gp2
-        accessModes:
-          - ReadWriteOnce
-        volumeMode: Block
-        resources:
-          requests:
-            storage: 1Ti
-    portable: true
-  - name: zone-b
-    count: 1
-    replica: 1
-    resources:
-      limits:
-        cpu: 2000m
-        memory: 4Gi
-      requests:
-        cpu: 100m
-        memory: 4Gi
-    placement:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: failure-domain.beta.kubernetes.io/zone
-                  operator: In
-                  values: [us-east-1b, us-east-2b]
-    dataPVCTemplate:
-      spec:
-        storageClassName: gp2
-        accessModes:
-          - ReadWriteOnce
-        volumeMode: Block
-        resources:
-          requests:
-            storage: 1Ti
-    portable: true
-  - name: zone-c
-    count: 1
-    replica: 1
-    resources:
-      limits:
-        cpu: 2000m
-        memory: 4Gi
-      requests:
-        cpu: 100m
-        memory: 4Gi
-    placement:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-            - matchExpressions:
-                - key: failure-domain.beta.kubernetes.io/zone
-                  operator: In
-                  values: [us-east-1c, us-east-2c]
+  - name: mydeviceset
+    count: 3
     dataPVCTemplate:
       spec:
         storageClassName: gp2
