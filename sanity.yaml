@@ -1,0 +1,71 @@
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: rbd
+spec:
+  storageClassName: openshift-storage-ceph-rbd
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rbd
+spec:
+  template:
+    spec:
+      containers:
+        - name: test
+          image: busybox
+          command: ["touch", "/mnt/data"]
+          volumeMounts:
+            - name: data
+              mountPath: "/mnt"
+      restartPolicy: Never
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: rbd
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cephfs
+spec:
+  storageClassName: openshift-storage-cephfs
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cephfs
+spec:
+  template:
+    spec:
+      containers:
+        - name: test
+          image: busybox
+          command: ["touch", "/mnt/data"]
+          volumeMounts:
+            - name: data
+              mountPath: "/mnt"
+      restartPolicy: Never
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: cephfs

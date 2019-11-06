@@ -7,6 +7,7 @@ cd "$SCRIPT_DIR" || exit 1
 
 NAMESPACE="openshift-storage"
 
+"$OC" delete ns "sanity-$NAMESPACE"
 "$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
 
 #-- Remove the finalizer so that the NS delete succeeds

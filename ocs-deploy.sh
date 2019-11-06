@@ -45,8 +45,22 @@ while [[ $("$OC" get -n "$NAMESPACE" cephcluster/openshift-storage -ocustom-colu
         sleep 10
 done
 
-echo Deployment of rook/ceph completed:
-"$OC" -n "$NAMESPACE" get po -oyaml | grep -E '(image:|imageID:)' | sort -u
-
 echo Tainting nodes
 "$OC" adm taint node -lcluster.ocs.openshift.io/openshift-storage="" node.ocs.openshift.io/storage=true:NoSchedule
+
+echo Running sanity check
+SANITYNS="sanity-$NAMESPACE"
+"$OC" create ns "$SANITYNS"
+"$OC" -n "$SANITYNS" apply -f sanity.yaml
+while [[ $("$OC" -n "$SANITYNS" get job/rbd -ocustom-columns=ready:status.succeeded --no-headers) != "1" ]]; do
+        "$OC" -n "$SANITYNS" get pvc/rbd
+        sleep 10
+done
+while [[ $("$OC" -n "$SANITYNS" get job/cephfs -ocustom-columns=ready:status.succeeded --no-headers) != "1" ]]; do
+        "$OC" -n "$SANITYNS" get pvc/cephfs
+        sleep 10
+done
+"$OC" delete ns "$SANITYNS"
+
+echo Deployment of rook/ceph completed:
+"$OC" -n "$NAMESPACE" get po -oyaml | grep -E '(image:|imageID:)' | sort -u
