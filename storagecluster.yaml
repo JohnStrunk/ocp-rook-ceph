@@ -27,4 +27,6 @@ spec:
         resources:
           requests:
             storage: 1Ti
+    placement: {}
     portable: true
+    resources: {}
