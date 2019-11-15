@@ -40,7 +40,7 @@ for m in ${MANIFESTS[*]}; do
         "$OC" -n "$NAMESPACE" apply -f "$m"
 done
 
-while [[ $("$OC" get -n "$NAMESPACE" cephcluster/openshift-storage -ocustom-columns=health:status.ceph.health --no-headers) != "HEALTH_OK" ]]; do
+while [[ $("$OC" get -n "$NAMESPACE" cephcluster/openshift-storage-cephcluster -ocustom-columns=health:status.ceph.health --no-headers) != "HEALTH_OK" ]]; do
         echo Waiting for cluster to be healthy
         sleep 10
 done

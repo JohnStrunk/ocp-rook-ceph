@@ -11,7 +11,7 @@ NAMESPACE="openshift-storage"
 "$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
 
 #-- Remove the finalizer so that the NS delete succeeds
-"$OC" -n "$NAMESPACE" patch cephclusters/openshift-storage --type merge -p '{"metadata":{"finalizers": [null]}}'
+"$OC" -n "$NAMESPACE" patch cephclusters/openshift-storage-cephcluster --type merge -p '{"metadata":{"finalizers": [null]}}'
 
 "$OC" delete namespace "$NAMESPACE"
 
