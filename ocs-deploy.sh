@@ -5,6 +5,9 @@ OC="$(realpath "${OC:-"$(command -v oc)"}")"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 cd "$SCRIPT_DIR" || exit 1
 
+# Label all worker nodes
+"$OC" label no -lnode-role.kubernetes.io/worker cluster.ocs.openshift.io/openshift-storage=""
+
 NAMESPACE="openshift-storage"
 # Upstream deployment
 #OCS_PATH="https://raw.githubusercontent.com/openshift/ocs-operator/master/deploy/deploy-with-olm.yaml"
