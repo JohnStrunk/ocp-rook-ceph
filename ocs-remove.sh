@@ -15,11 +15,6 @@ NAMESPACE="openshift-storage"
 
 "$OC" delete namespace "$NAMESPACE"
 
-#MACHINESETS="$("$OC" -n openshift-machine-api get machinesets -o custom-columns=name:metadata.name --no-headers | grep ocs)"
-#for ms in $MACHINESETS; do
-#        "$OC" -n openshift-machine-api delete "machinesets/$ms"
-#done
-
 "$OC" delete StorageClass/openshift-storage-ceph-rbd
 "$OC" delete StorageClass/openshift-storage-cephfs
 
