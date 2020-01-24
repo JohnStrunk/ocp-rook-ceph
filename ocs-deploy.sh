@@ -20,6 +20,7 @@ NAMESPACE="openshift-storage"
 # Upstream deployment
 #OCS_PATH="https://raw.githubusercontent.com/openshift/ocs-operator/master/deploy/deploy-with-olm.yaml"
 # Downstream deployment
+# See: https://github.com/red-hat-storage/ocs-ci/blob/master/conf/ocsci/downstream_config.yaml
 OCS_PATH="http://pkgs.devel.redhat.com/cgit/containers/ocs-registry/plain/deploy-with-olm.yaml?h=ocs-4.2-rhel-8"
 
 # What is the current DS version?
@@ -45,8 +46,9 @@ while [[ $("$OC" get -n "$NAMESPACE" cephcluster/openshift-storage-cephcluster -
         sleep 10
 done
 
-echo Tainting nodes
-"$OC" adm taint node -lcluster.ocs.openshift.io/openshift-storage="" node.ocs.openshift.io/storage=true:NoSchedule
+# Tainting disabled in OCS 4.2
+#echo Tainting nodes
+#"$OC" adm taint node -lcluster.ocs.openshift.io/openshift-storage="" node.ocs.openshift.io/storage=true:NoSchedule
 
 echo Running sanity check
 SANITYNS="sanity-$NAMESPACE"
