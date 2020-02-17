@@ -5,15 +5,7 @@ OC="$(realpath "${OC:-"$(command -v oc)"}")"
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 cd "$SCRIPT_DIR" || exit 1
 
-# Label all worker nodes
-"$OC" label no --overwrite -lnode-role.kubernetes.io/worker cluster.ocs.openshift.io/openshift-storage=""
-
 NAMESPACE="openshift-storage"
-# Upstream deployment
-#OCS_PATH="https://raw.githubusercontent.com/openshift/ocs-operator/master/deploy/deploy-with-olm.yaml"
-# Downstream deployment
-# See: https://github.com/red-hat-storage/ocs-ci/blob/master/conf/ocsci/downstream_config.yaml
-#OCS_PATH="http://pkgs.devel.redhat.com/cgit/containers/ocs-registry/plain/deploy-with-olm.yaml?h=ocs-4.2-rhel-8"
 
 "$OC" apply -n openshift-marketplace -f catalog-source.yaml
 "$OC" create ns "$NAMESPACE"
