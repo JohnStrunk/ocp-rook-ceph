@@ -5,7 +5,6 @@ kind: StorageCluster
 metadata:
   name: openshift-storage
 spec:
-  # hostNetwork: true
   manageNodes: false
   monPVCTemplate:
     spec:
@@ -15,18 +14,38 @@ spec:
       resources:
         requests:
           storage: 10Gi
+  resources:
+    mgr:
+      limits:
+        memory: 512Mi
+      requests:
+        memory: 512Mi
+    mon:
+      limits:
+        memory: 1Gi
+      requests:
+        memory: 1Gi
+    mds:
+      limits:
+        memory: 4Gi
+      requests:
+        memory: 4Gi
   storageDeviceSets:
-  - name: mydeviceset
-    count: 3
-    dataPVCTemplate:
-      spec:
-        storageClassName: gp2
-        accessModes:
-          - ReadWriteOnce
-        volumeMode: Block
-        resources:
-          requests:
-            storage: 1Ti
-    placement: {}
-    portable: true
-    resources: {}
+    - name: mydeviceset
+      count: 3
+      dataPVCTemplate:
+        spec:
+          storageClassName: gp2
+          accessModes:
+            - ReadWriteOnce
+          volumeMode: Block
+          resources:
+            requests:
+              storage: 500Gi
+      placement: {}
+      portable: true
+      resources:
+        limits:
+          memory: 2Gi
+        requests:
+          memory: 2Gi

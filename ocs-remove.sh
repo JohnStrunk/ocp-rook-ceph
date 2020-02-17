@@ -14,6 +14,7 @@ NAMESPACE="openshift-storage"
 "$OC" -n "$NAMESPACE" patch cephclusters/openshift-storage-cephcluster --type merge -p '{"metadata":{"finalizers": [null]}}'
 
 "$OC" delete namespace "$NAMESPACE"
+"$OC" delete -f catalog-source.yaml
 
 "$OC" delete StorageClass/openshift-storage-ceph-rbd
 "$OC" delete StorageClass/openshift-storage-cephfs
