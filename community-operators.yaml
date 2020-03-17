@@ -1,0 +1,122 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: community-operators
+  namespace: openshift-marketplace
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      marketplace.operatorSource: community-operators
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        marketplace.operatorSource: community-operators
+      name: community-operators
+      namespace: openshift-marketplace
+    spec:
+      containers:
+      - command:
+        - appregistry-server
+        - -r
+        - https://quay.io/cnr|community-operators
+        - -o
+        - lightbend-console-operator,knative-kafka-operator,smartgateway-operator,federatorai,spark-gcp,seldon-operator,akka-cluster-operator,enmasse,jenkins-operator,descheduler,postgresql,codeready-toolchain-operator,neuvector-community-operator,nexus-operator-hub,container-security-operator,strimzi-kafka-operator,kubefed,opsmx-spinnaker-operator,openebs,ripsaw,halkyon,api-operator,metering,jaeger,grafana-operator,keycloak-operator,keda,multicluster-operators-subscription,prometheus,cert-utils-operator,quay,composable-operator,special-resource-operator,keepalived-operator,nsm-operator-registry,node-problem-detector,3scale-community-operator,apicast-community-operator,must-gather-operator,skydive-operator,apicurito,esindex-operator,kiali,kubeturbo,federation,knative-eventing-operator,infinispan,openshift-pipelines-operator,ember-csi-operator,lib-bucket-provisioner,camel-k,cockroachdb,submariner,konveyor-operator,eclipse-che,syndesis,knative-camel-operator,radanalytics-spark,event-streams-topic,hawtio-operator,postgresql-operator-dev4devs-com,snyk-operator,etcd,planetscale,iot-simulator,resource-locker-operator,multicloud-operators-subscription,namespace-configuration-operator,ibmcloud-operator,argocd-operator-helm,triggermesh,t8c,teiid,hyperfoil-bundle,kogito-operator,argocd-operator,myvirtualdirectory,microsegmentation-operator,maistraoperator,service-binding-operator,kubestone,ibm-spectrum-scale-csi-operator,traefikee-operator,aqua,twistlock,opendatahub-operator,atlasmap-operator,awss3-operator-registry,microcks,spinnaker-operator
+        env:
+        - name: HTTP_PROXY
+        - name: HTTPS_PROXY
+        - name: NO_PROXY
+        image: quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:68763083b100b5d82739dedb08d9c154cd3c8ee0435ed4fad5674cb9b013aec9
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - grpc_health_probe
+            - -addr=localhost:50051
+          failureThreshold: 30
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: community-operators
+        ports:
+        - containerPort: 50051
+          name: grpc
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - grpc_health_probe
+            - -addr=localhost:50051
+          failureThreshold: 30
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/pki/ca-trust/extracted/pem/
+          name: marketplace-trusted-ca
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: ca-bundle.crt
+            path: tls-ca-bundle.pem
+          name: marketplace-trusted-ca
+        name: marketplace-trusted-ca
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: community-operators
+  namespace: openshift-marketplace
+spec:
+  # clusterIP: 172.30.47.167
+  ports:
+  - name: grpc
+    port: 50051
+    protocol: TCP
+    targetPort: 50051
+  selector:
+    marketplace.operatorSource: community-operators
+  sessionAffinity: None
+  type: ClusterIP
+
+
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: community-operators
+  namespace: openshift-marketplace
+spec:
+  address: community-operators.openshift-marketplace.svc:50051
+  displayName: Community Operators
+  icon:
+    base64data: ""
+    mediatype: ""
+  publisher: Red Hat
+  sourceType: grpc

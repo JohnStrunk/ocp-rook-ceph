@@ -5,7 +5,7 @@ metadata:
   name: ocs-subscription
   namespace: openshift-storage
 spec:
-  channel: alpha
+  channel: stable-4.3
   name: ocs-operator
   source: ocs-catalogsource
   sourceNamespace: openshift-marketplace
