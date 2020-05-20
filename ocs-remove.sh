@@ -8,12 +8,12 @@ cd "$SCRIPT_DIR" || exit 1
 NAMESPACE="openshift-storage"
 
 "$OC" delete ns "sanity-$NAMESPACE"
-"$OC" -n "$NAMESPACE" delete -f storagecluster.yaml
+"$OC" -n "$NAMESPACE" delete --wait=true -f storagecluster.yaml
 
 #-- Remove the finalizer so that the NS delete succeeds
-"$OC" -n "$NAMESPACE" patch cephclusters/openshift-storage-cephcluster --type merge -p '{"metadata":{"finalizers": [null]}}'
+#"$OC" -n "$NAMESPACE" patch cephclusters/openshift-storage-cephcluster --type merge -p '{"metadata":{"finalizers": [null]}}'
 
-"$OC" delete namespace "$NAMESPACE"
+"$OC" delete --wait=true namespace "$NAMESPACE"
 "$OC" delete -f catalog-source.yaml
 
 "$OC" delete StorageClass/openshift-storage-ceph-rbd
