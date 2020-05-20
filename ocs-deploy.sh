@@ -9,6 +9,8 @@ NAMESPACE="openshift-storage"
 
 "$OC" apply -n openshift-marketplace -f catalog-source.yaml
 "$OC" create ns "$NAMESPACE"
+"$OC" label ns "$NAMESPACE" openshift.io/cluster-monitoring=true
+"$OC" label ns "$NAMESPACE" managed.openshift.io/storage-pv-quota-exempt=true
 "$OC" apply -n "$NAMESPACE" -f operator-group.yaml
 "$OC" apply -n "$NAMESPACE" -f subscription.yaml
 
