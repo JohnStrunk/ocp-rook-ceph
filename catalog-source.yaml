@@ -11,6 +11,7 @@ spec:
   icon:
     base64data: ""
     mediatype: ""
-  image: quay.io/rhceph-dev/ocs-olm-operator:latest-4.3
+  # image: quay.io/rhceph-dev/ocs-olm-operator:latest-4.3
+  image: quay.io/rhceph-dev/ocs-olm-operator:latest-4.4
   publisher: Red Hat
   sourceType: grpc
