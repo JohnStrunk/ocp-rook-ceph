@@ -11,25 +11,37 @@ spec:
       storageClassName: gp2
       accessModes:
         - ReadWriteOnce
-      resources:
-        requests:
-          storage: 10Gi
   resources:
+    mds:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 2
+        memory: 4Gi
     mgr:
       limits:
         memory: 512Mi
       requests:
+        cpu: 1
         memory: 512Mi
     mon:
       limits:
         memory: 1Gi
       requests:
+        cpu: 1
         memory: 1Gi
-    mds:
+    noobaa-core:
       limits:
-        memory: 4Gi
+        cpu: 10m
+        #memory: 4Gi
+        memory: 1Gi
       requests:
-        memory: 4Gi
+    noobaa-db:
+      limits:
+        cpu: 10m
+        #memory: 4Gi
+        memory: 1Gi
+      requests:
   storageDeviceSets:
     - name: mydeviceset
       count: 3
@@ -48,4 +60,5 @@ spec:
         limits:
           memory: 2Gi
         requests:
+          cpu: 1
           memory: 2Gi
