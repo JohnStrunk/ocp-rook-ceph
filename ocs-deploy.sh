@@ -1,11 +1,15 @@
 #! /bin/bash
 
+set -e -o pipefail
+
 OC="$(realpath "${OC:-"$(command -v oc)"}")"
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 cd "$SCRIPT_DIR" || exit 1
 
 NAMESPACE="openshift-storage"
+# STORAGECLUSTER="openshift-storage"
+STORAGECLUSTER="ocs-storagecluster"
 
 "$OC" apply -n openshift-marketplace -f catalog-source.yaml
 "$OC" create ns "$NAMESPACE"
@@ -21,7 +25,7 @@ done
 
 "$OC" -n "$NAMESPACE" apply -f storagecluster.yaml
 
-while [[ $("$OC" get -n "$NAMESPACE" cephcluster/openshift-storage-cephcluster -ocustom-columns=health:status.ceph.health --no-headers) != "HEALTH_OK" ]]; do
+while [[ $("$OC" get -n "$NAMESPACE" "cephcluster/${STORAGECLUSTER}-cephcluster" -ocustom-columns=health:status.ceph.health --no-headers) != "HEALTH_OK" ]]; do
         echo Waiting for cluster to be healthy
         sleep 10
 done

@@ -3,8 +3,13 @@
 apiVersion: ocs.openshift.io/v1
 kind: StorageCluster
 metadata:
-  name: openshift-storage
+  name: ocs-storagecluster
+  namespace: openshift-storage
 spec:
+  # The empty label selector removes the default so components can run an all
+  # worker nodes.
+  labelSelector:
+    matchExpressions: []
   manageNodes: false
   monPVCTemplate:
     spec:
@@ -16,32 +21,32 @@ spec:
       limits:
         memory: 4Gi
       requests:
-        cpu: 2
+        cpu: 1000m
         memory: 4Gi
     mgr:
       limits:
         memory: 512Mi
       requests:
-        cpu: 1
+        cpu: 1000m
         memory: 512Mi
     mon:
       limits:
         memory: 1Gi
       requests:
-        cpu: 1
+        cpu: 1000m
         memory: 1Gi
     noobaa-core:
       limits:
-        cpu: 10m
-        #memory: 4Gi
         memory: 1Gi
       requests:
+        cpu: 1m
+        memory: 1Mi
     noobaa-db:
       limits:
-        cpu: 10m
-        #memory: 4Gi
         memory: 1Gi
       requests:
+        cpu: 1m
+        memory: 1Mi
   storageDeviceSets:
     - name: mydeviceset
       count: 3
@@ -60,5 +65,5 @@ spec:
         limits:
           memory: 2Gi
         requests:
-          cpu: 1
+          cpu: 1000m
           memory: 2Gi

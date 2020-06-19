@@ -5,7 +5,7 @@ apiVersion: v1
 metadata:
   name: rbd
 spec:
-  storageClassName: openshift-storage-ceph-rbd
+  storageClassName: ocs-storagecluster-ceph-rbd
   accessModes:
     - ReadWriteOnce
   resources:
@@ -41,7 +41,7 @@ apiVersion: v1
 metadata:
   name: cephfs
 spec:
-  storageClassName: openshift-storage-cephfs
+  storageClassName: ocs-storagecluster-cephfs
   accessModes:
     - ReadWriteOnce
   resources:
